@@ -1,0 +1,234 @@
+.detail-image {
+  width: 100%;
+  height: 400px;
+}
+
+.detail-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.8);
+}
+
+.detail-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 1400px;
+  margin: auto;
+  gap: 20px;
+  padding: 20px 0px;
+}
+
+.detail-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.detail-rating,
+.detail-city {
+  color: white;
+  margin: 0px;
+  font-size: 0.9rem;
+  background-color: rgb(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  padding: 8px 14px;
+  border-radius: 55px;
+}
+
+#like-button {
+  background-color: rgb(0, 0, 0, 0.3);
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 100%;
+}
+
+.detail-main h1 {
+  color: darkgreen;
+  font-size: 2rem;
+  margin: 0;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.detail-main p {
+  color: #333;
+  font-size: 1rem;
+  text-align: justify;
+  margin: 0;
+}
+
+.detail-more {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 40px;
+}
+
+.detail-more > * {
+  flex: 1;
+  width: 50%;
+}
+
+.detail-more h2 {
+  color: rgb(39, 113, 39);
+}
+
+.detail-menu h3 {
+  font-size: 20px;
+  color: #444;
+  margin-top: 0;
+}
+
+.detail-menu-item ul {
+  color: #444;
+}
+
+.detail-menu-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.detail-menu-item ul {
+  column-count: 2;
+  column-gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style-position: inside;
+}
+
+.detail-menu-item li {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.detail-menu-item ul li:nth-child(n + 21) {
+  margin-top: 1rem;
+}
+
+.detail-review {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detail-review h2 {
+  color: rgb(39, 113, 39);
+}
+
+.detail-post-review {
+  margin-bottom: 20px;
+}
+
+.detail-post-review h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #444;
+}
+
+#post-review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-control {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-control label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.form-control input,
+.form-control textarea {
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  max-width: 99.5%;
+  min-height: 44px;
+  padding: 10px;
+}
+
+.form-control textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+#post-review-form button {
+  padding: 14px 20px;
+  font-size: 14px;
+  color: #fff;
+  background-color: rgb(2, 155, 2);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: background-color 0.3s;
+}
+
+#post-review-form button:hover {
+  background-color: darkgreen;
+}
+
+.detail-other-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 10px;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.review {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e4e4e4;
+}
+
+.review-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.review-name {
+  color: black;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.review-date {
+  color: #555;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.review p {
+  color: #333;
+  font-size: 0.9rem;
+  margin: 0;
+}
