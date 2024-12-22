@@ -133,6 +133,7 @@ body {
 /* Content */
 #mainContent:focus {
   outline: none;
+  height: 100%;
 }
 
 .content {
@@ -228,8 +229,8 @@ footer {
   background-color: rgb(2, 155, 2);
   color: white;
   text-align: center;
-  padding: 1rem;
-  border: 1px solid #e0e0e0;
+  padding: 1rem 0rem;
+  width: 100%;
 }
 
 /* Media Queries */
