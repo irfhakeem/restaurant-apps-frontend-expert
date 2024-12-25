@@ -1,13 +1,46 @@
-import { DetailRestaurant, RestaurantImage, AddReview } from "../../api/api";
+import { DetailRestaurant, RestaurantImage, AddReview } from "../../data/api";
+import likeButton from "../../components/likeButton";
+import loading from "./loading";
+import config from "../../globals/config";
 
-async function fetchRestaurant(id) {
-  const restaurant = await DetailRestaurant({ id: id });
-  return restaurant;
+const CACHE_NAME = config.CACHE_NAME;
+
+async function fetchWithCache(requestKey, fetchFunction) {
+  const cache = await caches.open(CACHE_NAME);
+  try {
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Request timed out")), 5000)
+    );
+
+    const fetchData = fetchFunction();
+    const data = await Promise.race([fetchData, timeout]);
+
+    if (!data) throw new Error("No Internet Connection");
+
+    const responseToCache = new Response(JSON.stringify(data));
+    await cache.put(requestKey, responseToCache);
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+
+    const cachedResponse = await cache.match(requestKey);
+    if (cachedResponse) return cachedResponse.json();
+
+    console.error("No data available");
+  }
 }
 
-async function fetchImage(pictureId) {
-  const imageUrl = await RestaurantImage({ pictureId });
-  return imageUrl;
+async function fetchRestaurant(id) {
+  return await fetchWithCache(`detailOfRestaurant-${id}`, () =>
+    DetailRestaurant({ id: id })
+  );
+}
+
+async function restaurantPicture(pictureId) {
+  return await fetchWithCache(`restaurantPicture-${pictureId}`, () =>
+    RestaurantImage({ pictureId: pictureId })
+  );
 }
 
 async function postReview(id, name, review) {
@@ -16,12 +49,18 @@ async function postReview(id, name, review) {
 }
 
 export default async (id) => {
+  const contentContainer = document.getElementById("mainContent");
+  if (contentContainer) contentContainer.innerHTML = loading();
+
   let data = await fetchRestaurant(id);
-  const imageUrl = await fetchImage(data.pictureId);
+  data = {
+    ...data,
+    pictureId: await restaurantPicture(data.pictureId),
+  };
 
   const template = `
     <div class="detail-image">
-      <img src="${imageUrl}" alt="${data.name}" />
+      <img src="${data.pictureId}" alt="${data.name}" />
     </div>
 
     <div class="detail-main">
@@ -31,13 +70,15 @@ export default async (id) => {
         <div class="detail-info">
           <div class="detail-city">📍 ${data.city}</div>
           <div class="detail-rating">⭐️ ${data.rating}</div>
-          <button id="like-button" aria-label="like this restaurant">🩷</button>
+          <div id="like-button-container">
+          </div>
         </div>
       </div>
 
       <div class="detail-more">
         <div class="detail-description">
           <h2>Description</h2>
+          <p style="margin-bottom:10px">Address: ${data.address}</p>
         <p>${data.description}</p>
         </div>
         <div class="detail-menu">
@@ -99,8 +140,20 @@ export default async (id) => {
     </div>
   `;
 
-  setTimeout(() => {
-    const form = document.getElementById("post-review-form");
+  contentContainer.innerHTML = template;
+
+  setTimeout(async () => {
+    const likeButtonContainer = document.getElementById(
+      "like-button-container"
+    );
+    if (likeButtonContainer) {
+      const likeButtonElement = await likeButton(id);
+      likeButtonContainer.appendChild(likeButtonElement);
+    }
+  }, 0);
+
+  const form = document.getElementById("post-review-form");
+  if (form) {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -108,15 +161,15 @@ export default async (id) => {
       const review = document.getElementById("review-text").value;
 
       try {
-        const result = await postReview(id, name, review);
-        alert("Review berhasil ditambahkan");
-
-        window.location.reload();
+        const response = await postReview(id, name, review);
+        if (response) alert("Review berhasil ditambahkan");
+        else throw new Error();
       } catch (error) {
         console.error("Error posting review:", error);
+        alert("Gagal menambahkan review");
       }
     });
-  }, 0);
+  } else console.log("form not found");
 
   return template;
 };

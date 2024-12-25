@@ -1,6 +1,9 @@
-import { ListOfRestaurants, RestaurantImage } from "../../data/api";
-import loading from "./loading";
-import config from "../../globals/config";
+import Database from '../../data/db';
+import { ListOfRestaurants, RestaurantImage } from '../../data/api';
+import loading from './loading';
+import config from '../../globals/config';
+import '../../../styles/favorite.css';
+import '../../../styles/main.css';
 
 const CACHE_NAME = config.CACHE_NAME;
 
@@ -8,7 +11,7 @@ async function fetchWithCache(requestKey, fetchFunction) {
   const cache = await caches.open(CACHE_NAME);
   try {
     const timeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Request timed out")), 2000)
+      setTimeout(() => reject(new Error('Request timed out')), 2000)
     );
 
     const fetchData = fetchFunction();
@@ -21,17 +24,21 @@ async function fetchWithCache(requestKey, fetchFunction) {
 
     return data;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error('Error fetching data:', error);
 
     const cachedResponse = await cache.match(requestKey);
     if (cachedResponse) return cachedResponse.json();
 
-    console.error("No data available");
+    console.error('No data available');
   }
 }
 
+async function fetchFavorites() {
+  return await Database.getAllFavorites();
+}
+
 async function fetchRestaurants() {
-  return await fetchWithCache("listOfRestaurants", ListOfRestaurants);
+  return await fetchWithCache('listOfRestaurants', ListOfRestaurants);
 }
 
 async function restaurantPictures(pictureId) {
@@ -41,10 +48,16 @@ async function restaurantPictures(pictureId) {
 }
 
 export default async () => {
-  const contentContainer = document.getElementById("mainContent");
+  const contentContainer = document.getElementById('mainContent');
   if (contentContainer) contentContainer.innerHTML = loading();
 
+  const favorites = await fetchFavorites();
+  console.log(favorites);
+
   let restaurants = await fetchRestaurants();
+  restaurants = restaurants.filter((restaurant) =>
+    favorites.includes(restaurant.id)
+  );
   restaurants = await Promise.all(
     restaurants.map(async (restaurant) => ({
       ...restaurant,
@@ -52,30 +65,13 @@ export default async () => {
     }))
   );
 
-  return `
-    <!-- Hero -->
-    <div class="hero">
-      <div class="hero-image">
-        <img src="./images/heros/hero-image_4.jpg" alt="hero-image" />
-      </div>
-      <div class="hero-inner">
-        <h1>Restaurant <span>Apps</span></h1>
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          Reprehenderit voluptatem a in aut magnam quos adipisci quo natus
-          beatae blanditiis, veritatis, est tenetur? Quasi mollitia asperiores,
-          sequi eius error obcaecati.
-        </p>
-      </div>
-    </div>
-
-    <!-- Content Container -->
-      <div class="content">
-        <h1>Explore Restaurants</h1>
-        <div id="content-container">
+  const template = `
+    <div class="favorite-main">
+        <h1>Your Favorite Restaurant</h1>
+        <div class="favorite-restaurants">
         ${restaurants
-          .map(
-            (restaurant) => `
+    .map(
+      (restaurant) => `
             <div class="card">
                 <img src="${restaurant.pictureId}" alt="${restaurant.name}" class="card-image">
                 <div class="card-info">
@@ -88,9 +84,10 @@ export default async () => {
                 </div>
             </div>
             `
-          )
-          .join("")}
+    )
+    .join('')}
         </div>
-      </div>
-    </main>`;
+    </div>`;
+
+  return template;
 };
