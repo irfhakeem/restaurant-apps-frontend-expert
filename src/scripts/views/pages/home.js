@@ -1,6 +1,6 @@
-import { ListOfRestaurants, RestaurantImage } from "../../data/api";
-import loading from "./loading";
-import config from "../../globals/config";
+import { ListOfRestaurants, RestaurantImage } from '../../data/api';
+import loading from './loading';
+import config from '../../globals/config';
 
 const CACHE_NAME = config.CACHE_NAME;
 
@@ -8,7 +8,7 @@ async function fetchWithCache(requestKey, fetchFunction) {
   const cache = await caches.open(CACHE_NAME);
   try {
     const timeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Request timed out")), 2000)
+      setTimeout(() => reject(new Error('Request timed out')), 2000)
     );
 
     const fetchData = fetchFunction();
@@ -21,17 +21,17 @@ async function fetchWithCache(requestKey, fetchFunction) {
 
     return data;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error('Error fetching data:', error);
 
     const cachedResponse = await cache.match(requestKey);
     if (cachedResponse) return cachedResponse.json();
 
-    console.error("No data available");
+    console.error('No data available');
   }
 }
 
 async function fetchRestaurants() {
-  return await fetchWithCache("listOfRestaurants", ListOfRestaurants);
+  return await fetchWithCache('listOfRestaurants', ListOfRestaurants);
 }
 
 async function restaurantPictures(pictureId) {
@@ -41,7 +41,7 @@ async function restaurantPictures(pictureId) {
 }
 
 export default async () => {
-  const contentContainer = document.getElementById("mainContent");
+  const contentContainer = document.getElementById('mainContent');
   if (contentContainer) contentContainer.innerHTML = loading();
 
   let restaurants = await fetchRestaurants();
@@ -52,7 +52,7 @@ export default async () => {
     }))
   );
 
-  return `
+  const template = `
     <!-- Hero -->
     <div class="hero">
       <div class="hero-image">
@@ -74,8 +74,8 @@ export default async () => {
         <h1>Explore Restaurants</h1>
         <div id="content-container">
         ${restaurants
-          .map(
-            (restaurant) => `
+    .map(
+      (restaurant) => `
             <div class="card">
                 <img src="${restaurant.pictureId}" alt="${restaurant.name}" class="card-image">
                 <div class="card-info">
@@ -88,9 +88,11 @@ export default async () => {
                 </div>
             </div>
             `
-          )
-          .join("")}
+    )
+    .join('')}
         </div>
       </div>
     </main>`;
+
+  contentContainer.innerHTML = template;
 };

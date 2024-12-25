@@ -1,5 +1,5 @@
-import Database from "../data/db";
-import "../../styles/detail.css";
+import Database from '../data/db';
+import '../../styles/detail.css';
 
 async function isFavorite(id) {
   return Database.isFavorite(id);
@@ -16,20 +16,20 @@ async function deleteFavorite(id) {
 export default async (id) => {
   let isFav = await isFavorite(id);
 
-  const container = document.createElement("div");
-  const likeButton = document.createElement("button");
-  likeButton.id = "like-button";
+  const container = document.createElement('div');
+  const likeButton = document.createElement('button');
+  likeButton.id = 'like-button';
   likeButton.ariaLabel = isFav
-    ? "unlike this restaurant"
-    : "like this restaurant";
-  likeButton.className = "like";
+    ? 'unlike this restaurant'
+    : 'like this restaurant';
+  likeButton.className = 'like';
   likeButton.innerHTML = `
       <i style="color:${
-        isFav ? "red" : "white"
-      };" class="fa fa-heart" aria-hidden="true"></i>
+  isFav ? 'red' : 'white'
+};" class="fa fa-heart" aria-hidden="true"></i>
     `;
 
-  likeButton.addEventListener("click", async () => {
+  likeButton.addEventListener('click', async () => {
     if (isFav) {
       await deleteFavorite(id);
       isFav = false;
@@ -39,9 +39,9 @@ export default async (id) => {
     }
 
     likeButton.ariaLabel = isFav
-      ? "unlike this restaurant"
-      : "like this restaurant";
-    likeButton.querySelector("i").style.color = isFav ? "red" : "white";
+      ? 'unlike this restaurant'
+      : 'like this restaurant';
+    likeButton.querySelector('i').style.color = isFav ? 'red' : 'white';
   });
 
   container.appendChild(likeButton);

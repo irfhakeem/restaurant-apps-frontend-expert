@@ -89,5 +89,5 @@ export default async () => {
         </div>
     </div>`;
 
-  return template;
+  contentContainer.innerHTML = template;
 };

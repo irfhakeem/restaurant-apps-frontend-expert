@@ -1,20 +1,20 @@
-import config from "../globals/config";
+import config from '../globals/config';
 
 export async function ListOfRestaurants() {
   try {
     const response = await fetch(
       `${config.baseUrl}${config.listOfRestaurants}`,
       {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       }
     );
     const responseJson = await response.json();
     return responseJson.restaurants;
   } catch (error) {
-    console.error("Error:", error);
+    console.error('Error:', error);
   }
 }
 
@@ -23,16 +23,16 @@ export async function DetailRestaurant(request) {
     const response = await fetch(
       `${config.baseUrl}${config.detailRestaurant}${request.id}`,
       {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       }
     );
     const responseJson = await response.json();
     return responseJson.restaurant;
   } catch (error) {
-    console.error("Error:", error);
+    console.error('Error:', error);
   }
 }
 
@@ -41,25 +41,25 @@ export async function SearchRestaurant(request) {
     const response = await fetch(
       `${config.baseUrl}${config.searchRestaurant}${request.query}`,
       {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       }
     );
     const responseJson = await response.json();
     return responseJson.restaurants;
   } catch (error) {
-    console.error("Error:", error);
+    console.error('Error:', error);
   }
 }
 
 export async function AddReview(request) {
   try {
     const response = await fetch(`${config.baseUrl}/review`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         id: request.id,
@@ -70,7 +70,7 @@ export async function AddReview(request) {
     const responseJson = await response.json();
     return responseJson.customerReviews;
   } catch (error) {
-    console.error("Error:", error);
+    console.error('Error:', error);
   }
 }
 
@@ -79,12 +79,12 @@ export async function RestaurantImage(request) {
     const response = await fetch(
       `${config.baseUrl}${config.restaurantImage}${request.pictureId}`,
       {
-        method: "GET",
+        method: 'GET',
       }
     );
     const blob = await response.blob();
     return URL.createObjectURL(blob);
   } catch (error) {
-    console.error("Error:", error);
+    console.error('Error:', error);
   }
 }

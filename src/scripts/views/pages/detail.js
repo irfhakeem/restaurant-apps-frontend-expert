@@ -1,7 +1,7 @@
-import { DetailRestaurant, RestaurantImage, AddReview } from "../../data/api";
-import likeButton from "../../components/likeButton";
-import loading from "./loading";
-import config from "../../globals/config";
+import { DetailRestaurant, RestaurantImage, AddReview } from '../../data/api';
+import likeButton from '../../components/likeButton';
+import loading from './loading';
+import config from '../../globals/config';
 
 const CACHE_NAME = config.CACHE_NAME;
 
@@ -9,25 +9,25 @@ async function fetchWithCache(requestKey, fetchFunction) {
   const cache = await caches.open(CACHE_NAME);
   try {
     const timeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Request timed out")), 5000)
+      setTimeout(() => reject(new Error('Request timed out')), 5000)
     );
 
     const fetchData = fetchFunction();
     const data = await Promise.race([fetchData, timeout]);
 
-    if (!data) throw new Error("No Internet Connection");
+    if (!data) throw new Error('No Internet Connection');
 
     const responseToCache = new Response(JSON.stringify(data));
     await cache.put(requestKey, responseToCache);
 
     return data;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error('Error fetching data:', error);
 
     const cachedResponse = await cache.match(requestKey);
     if (cachedResponse) return cachedResponse.json();
 
-    console.error("No data available");
+    console.error('No data available');
   }
 }
 
@@ -49,7 +49,7 @@ async function postReview(id, name, review) {
 }
 
 export default async (id) => {
-  const contentContainer = document.getElementById("mainContent");
+  const contentContainer = document.getElementById('mainContent');
   if (contentContainer) contentContainer.innerHTML = loading();
 
   let data = await fetchRestaurant(id);
@@ -88,16 +88,16 @@ export default async (id) => {
               <h3>Foods</h3>
               <ul>
                 ${data.menus.foods
-                  .map((food) => `<li>${food.name}</li>`)
-                  .join("")}
+    .map((food) => `<li>${food.name}</li>`)
+    .join('')}
               </ul>
             </div>
             <div class="detail-menu-item">
               <h3>Drinks</h3>
               <ul>
                 ${data.menus.drinks
-                  .map((drink) => `<li>${drink.name}</li>`)
-                  .join("")}
+    .map((drink) => `<li>${drink.name}</li>`)
+    .join('')}
               </ul>
             </div>
           </div>
@@ -121,10 +121,10 @@ export default async (id) => {
           </form>
         </div>
 
-        <div class="detail-other-reviews">
+        <div class="detail-other-reviews" id="detail-other-reviews">
           ${data.customerReviews
-            .map(
-              (review) => `
+    .map(
+      (review) => `
                 <div class="review">
                   <div class="review-header">
                     <div class="review-name">👤 ${review.name}</div>
@@ -133,8 +133,8 @@ export default async (id) => {
                   <p>${review.review}</p>
                 </div>
               `
-            )
-            .join("")}
+    )
+    .join('')}
         </div>
       </div>
     </div>
@@ -144,7 +144,7 @@ export default async (id) => {
 
   setTimeout(async () => {
     const likeButtonContainer = document.getElementById(
-      "like-button-container"
+      'like-button-container'
     );
     if (likeButtonContainer) {
       const likeButtonElement = await likeButton(id);
@@ -152,24 +152,45 @@ export default async (id) => {
     }
   }, 0);
 
-  const form = document.getElementById("post-review-form");
+  const form = document.getElementById('post-review-form');
   if (form) {
-    form.addEventListener("submit", async (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const name = document.getElementById("review-name").value;
-      const review = document.getElementById("review-text").value;
+      const name = document.getElementById('review-name').value;
+      const review = document.getElementById('review-text').value;
 
       try {
         const response = await postReview(id, name, review);
-        if (response) alert("Review berhasil ditambahkan");
-        else throw new Error();
+        if (response) {
+          alert('Review berhasil ditambahkan');
+          const detailOtherReview = document.getElementById(
+            'detail-other-reviews'
+          );
+          detailOtherReview.innerHTML = `
+            ${response
+    .map(
+      (review) => `
+                <div class="review">
+                  <div class="review-header">
+                    <div class="review-name">👤 ${review.name}</div>
+                    <div class="review-date">${review.date}</div>
+                  </div>
+                  <p>${review.review}</p>
+                </div>
+              `
+    )
+    .join('')}
+          `;
+
+          form.reset();
+        } else throw new Error();
       } catch (error) {
-        console.error("Error posting review:", error);
-        alert("Gagal menambahkan review");
+        console.error('Error posting review:', error);
+        alert('Gagal menambahkan review');
       }
     });
-  } else console.log("form not found");
+  } else console.log('form not found');
 
   return template;
 };
