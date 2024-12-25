@@ -1,0 +1,37 @@
+.favorite-main {
+  width: fit-content;
+  max-width: 1400px;
+  margin: auto;
+  padding: 20px;
+}
+
+.favorite-main h1 {
+  font-size: 2rem;
+  color: darkgreen;
+}
+
+.favorite-restaurants {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .favorite-restaurants {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .favorite-main h1 {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .favorite-restaurants {
+    grid-template-columns: 1fr;
+  }
+
+  .favorite-main h1 {
+    font-size: 1.5rem;
+  }
+}

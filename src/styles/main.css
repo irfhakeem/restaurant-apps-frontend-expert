@@ -125,7 +125,6 @@ body {
 }
 
 .hero-inner p {
-  margin: 1rem 0 0;
   font-size: 1.2rem;
   color: white;
 }
@@ -153,12 +152,13 @@ body {
 }
 
 #content-container {
-  width: 100%;
+  width: fit-content;
   max-width: 1400px;
-  margin: 0 auto;
+  margin: auto;
+  padding: 20px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
+  gap: 2rem;
 }
 
 /* Card */
@@ -167,7 +167,6 @@ body {
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin: 1rem;
   overflow: hidden;
 }
 
@@ -293,7 +292,7 @@ footer {
   }
 
   .hero-inner {
-    width: 100%;
+    width: fit-content;
     padding: 1rem;
   }
 
@@ -307,7 +306,6 @@ footer {
 
   #content-container {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0rem;
   }
 
   .card img {
@@ -337,10 +335,6 @@ footer {
     height: 200px;
   }
 
-  .hero-inner {
-    padding: 0.5rem;
-  }
-
   .hero-inner h1 {
     font-size: 1.5rem;
   }
@@ -351,7 +345,6 @@ footer {
 
   #content-container {
     grid-template-columns: 1fr;
-    gap: 0rem;
   }
 
   .card img {
